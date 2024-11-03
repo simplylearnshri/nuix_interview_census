@@ -55,7 +55,7 @@ public class Census {
             result.getTop3Ages();
 
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             System.err.println(e.getMessage());
         }
         return result.getCensusReport();
@@ -70,22 +70,24 @@ public class Census {
     public String[] top3Ages(List<String> regionNames) {
 
         Top3Population result = new Top3Population();
-        for (String regionName : regionNames) {
-            AgeInputIterator iterator = iteratorFactory.apply(regionName);
-            Region censusRegion = new Region();
-            while (iterator.hasNext()) {
+        try {
+            for (String regionName : regionNames) {
+                AgeInputIterator iterator = iteratorFactory.apply(regionName);
+                Region censusRegion = new Region();
+                while (iterator.hasNext()) {
 
-                Integer age = iterator.next();
-                if (age >= 0) {
-                    result.addAge(age);
+                    Integer age = iterator.next();
+                    if (age >= 0) {
+                        result.addAge(age);
 
+                    }
                 }
-            }
-            try {
+
                 iterator.close();
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
+
             }
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
         }
         result.getTop3Ages();
         return result.getCensusReport();

@@ -38,7 +38,6 @@ public class Top3Population {
 
         List<String> result = new ArrayList<>();
         resultTop3.forEach((pos, list) -> {
-
             list.forEach(map -> map.forEach((age, count) ->  result.add( String.format(Census.OUTPUT_FORMAT, pos, age, count))));
         });
         return result.toArray(new String[0]);
