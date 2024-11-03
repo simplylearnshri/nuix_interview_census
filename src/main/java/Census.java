@@ -1,6 +1,6 @@
 import java.io.Closeable;
-import java.util.Iterator;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -39,14 +39,27 @@ public class Census {
 
         AgeInputIterator iterator = iteratorFactory.apply(region);
 
-//        In the example below, the top three are ages 10, 15 and 12
-//        return new String[]{
-//                String.format(OUTPUT_FORMAT, 1, 10, 38),
-//                String.format(OUTPUT_FORMAT, 2, 15, 35),
-//                String.format(OUTPUT_FORMAT, 3, 12, 30)
-//        };
-        System.out.println(CORES);
-        throw new UnsupportedOperationException();
+        Top3Population result = new Top3Population();
+        try {
+
+            Region censusRegion = new Region();
+            while (iterator.hasNext()) {
+
+                Integer age = iterator.next();
+                if (age >= 0) {
+                    censusRegion.addAge(age);
+                    result.addAge(age);
+                }
+            }
+            iterator.close();
+            result.getTop3Ages();
+
+
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+        return result.getCensusReport();
+
     }
 
     /**
@@ -56,14 +69,26 @@ public class Census {
      */
     public String[] top3Ages(List<String> regionNames) {
 
-//        In the example below, the top three are ages 10, 15 and 12
-//        return new String[]{
-//                String.format(OUTPUT_FORMAT, 1, 10, 38),
-//                String.format(OUTPUT_FORMAT, 2, 15, 35),
-//                String.format(OUTPUT_FORMAT, 3, 12, 30)
-//        };
+        Top3Population result = new Top3Population();
+        for (String regionName : regionNames) {
+            AgeInputIterator iterator = iteratorFactory.apply(regionName);
+            Region censusRegion = new Region();
+            while (iterator.hasNext()) {
 
-        throw new UnsupportedOperationException();
+                Integer age = iterator.next();
+                if (age >= 0) {
+                    result.addAge(age);
+
+                }
+            }
+            try {
+                iterator.close();
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
+        }
+        result.getTop3Ages();
+        return result.getCensusReport();
     }
 
 
